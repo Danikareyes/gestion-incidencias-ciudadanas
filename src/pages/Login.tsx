@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
+   import PantallaAcceso from '../components/PantallaAcceso'
 
 const claseCampo =
   'h-11 w-full rounded-lg border border-bordillo bg-white px-3 text-base focus:border-civico focus:outline-none'
@@ -34,8 +35,7 @@ export default function Login() {
   }
 
   return (
-    <section className="mx-auto max-w-sm space-y-6">
-      <h1 className="text-3xl font-extrabold text-civico">Iniciar sesión</h1>
+      <PantallaAcceso titulo="Iniciar sesión">
 
       <form onSubmit={iniciarSesion} className="space-y-4">
         <div className="space-y-1">
@@ -67,6 +67,6 @@ export default function Login() {
         ¿No tienes cuenta?{' '}
         <Link to="/registro" className="font-semibold text-civico underline">Regístrate</Link>
       </p>
-    </section>
+    </PantallaAcceso>
   )
 }

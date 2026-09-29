@@ -1,5 +1,8 @@
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { useAuth } from '../lib/auth'
+
+// Mismo ancho y márgenes para cabecera y contenido
+const contenedor = 'mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12'
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
   `rounded-lg px-3 py-2 text-sm font-semibold ${
@@ -8,11 +11,15 @@ const claseEnlace = ({ isActive }: { isActive: boolean }) =>
 
 export default function Layout() {
   const { session, perfil, esPersonal, cerrarSesion } = useAuth()
+  const { pathname } = useLocation()
+
+  // El panel admin queda arriba; el resto se centra en altura
+  const centrarEnAltura = !pathname.startsWith('/admin')
 
   return (
-    <div className="min-h-screen bg-papel text-asfalto">
+    <div className="flex min-h-screen flex-col bg-papel text-asfalto">
       <header className="bg-civico text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <div className={`${contenedor} flex flex-wrap items-center justify-between gap-3 py-3`}>
           <Link to="/" className="text-lg font-extrabold">Reportes Ciudadanos</Link>
 
           <nav className="flex flex-wrap items-center gap-1">
@@ -40,8 +47,10 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7x1 px-4 py-8">
-        <Outlet />
+      <main className={`${contenedor} flex flex-grow flex-col py-10 lg:py-14`}>
+        <div className={centrarEnAltura ? 'my-auto w-full' : 'w-full'}>
+          <Outlet />
+        </div>
       </main>
     </div>
   )

@@ -56,41 +56,62 @@ export default function Seguimiento() {
   }
 
   return (
-    <section className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-3xl font-extrabold text-civico">Seguimiento</h1>
-      <p className="text-gris">Escribe el código que recibiste al crear tu reporte.</p>
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      {/* Columna izquierda: buscador */}
+      <section className="space-y-6 lg:py-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-extrabold text-civico lg:text-4xl">Seguimiento</h1>
+          <p className="text-lg text-gris">Escribe el código que recibiste al crear tu reporte.</p>
+        </div>
 
-      <form onSubmit={buscar} className="flex flex-wrap gap-2">
-        <label htmlFor="codigo" className="sr-only">Código de seguimiento</label>
-        <input id="codigo" type="text" required value={codigo} onChange={(e) => setCodigo(e.target.value)}
-          placeholder="RPT-2026-000123"
-          className="h-12 flex-grow rounded-lg border border-bordillo bg-white px-3 font-mono text-base uppercase focus:border-civico focus:outline-none" />
-        <button type="submit" disabled={buscando}
-          className="h-12 rounded-xl bg-civico px-6 font-bold text-white disabled:opacity-60">
-          {buscando ? 'Buscando…' : 'Consultar'}
-        </button>
-      </form>
+        <form onSubmit={buscar} className="flex flex-wrap gap-2">
+          <label htmlFor="codigo" className="sr-only">Código de seguimiento</label>
+          <input id="codigo" type="text" required value={codigo} onChange={(e) => setCodigo(e.target.value)}
+            placeholder="RPT-2026-000123"
+            className="h-12 flex-grow rounded-lg border border-bordillo bg-white px-3 font-mono text-base uppercase focus:border-civico focus:outline-none" />
+          <button type="submit" disabled={buscando}
+            className="h-12 rounded-xl bg-civico px-6 font-bold text-white disabled:opacity-60">
+            {buscando ? 'Buscando…' : 'Consultar'}
+          </button>
+        </form>
 
-      {mensaje && (
-        <p role="alert" className="rounded-lg bg-senal-tenue px-3 py-2 text-sm text-senal">{mensaje}</p>
-      )}
+        {mensaje && (
+          <p role="alert" className="rounded-lg bg-senal-tenue px-3 py-2 text-sm text-senal">{mensaje}</p>
+        )}
 
-      {resultado && (
-        <article className="space-y-5 rounded-2xl border border-bordillo bg-white p-6">
-          <div className="space-y-2">
-            <span className="font-mono text-sm text-gris">{resultado.codigo}</span>
-            <h2 className="text-xl font-extrabold">{resultado.titulo}</h2>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-gris">
-              <EtiquetaEstado estado={resultado.estado} />
-              <span>{resultado.categoria}</span>
+        <div className="space-y-2 rounded-2xl border border-bordillo bg-white p-5 text-sm text-gris">
+          <p className="font-semibold text-asfalto">¿Dónde encuentro mi código?</p>
+          <p>
+            Lo recibes al enviar tu reporte y también aparece en "Mis reportes".
+            Tiene el formato <span className="font-mono">RPT-2026-000123</span>.
+          </p>
+        </div>
+      </section>
+
+      {/* Columna derecha: resultado */}
+      <section>
+        {resultado ? (
+          <article className="space-y-5 rounded-2xl border border-bordillo bg-white p-6 lg:p-8">
+            <div className="space-y-2">
+              <span className="font-mono text-sm text-gris">{resultado.codigo}</span>
+              <h2 className="text-2xl font-extrabold">{resultado.titulo}</h2>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-gris">
+                <EtiquetaEstado estado={resultado.estado} />
+                <span>{resultado.categoria}</span>
+              </div>
+              <p className="text-sm text-gris">
+                {resultado.direccion ?? 'Sin dirección indicada'} · Creado el {formatearFecha(resultado.creado)}
+              </p>
             </div>
-            <p className="text-sm text-gris">
-              {resultado.direccion ?? 'Sin dirección indicada'} · Creado el {formatearFecha(resultado.creado)}
-            </p>
+            <LineaTiempo eventos={resultado.historial} estadoActual={resultado.estado} />
+          </article>
+        ) : (
+          <div className="hidden h-full min-h-[22rem] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-bordillo p-8 text-center lg:flex">
+            <p className="font-semibold text-asfalto">Aquí verás el estado de tu reporte</p>
+            <p className="text-sm text-gris">Con su historial completo, paso a paso.</p>
           </div>
-          <LineaTiempo eventos={resultado.historial} estadoActual={resultado.estado} />
-        </article>
-      )}
-    </section>
+        )}
+      </section>
+    </div>
   )
-}
+}  

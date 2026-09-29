@@ -25,6 +25,7 @@ export default function Inicio() {
   const [mostrarResueltos, setMostrarResueltos] = useState(true)
   const [error, setError] = useState('')
 
+  // Cargar categorías y reportes públicos
   useEffect(() => {
     if (!supabase) return
     Promise.all([
@@ -44,6 +45,7 @@ export default function Inicio() {
     })
   }, [])
 
+  // Aplicar filtros y añadir nombre y color de la categoría
   const reportes = useMemo<ReportePublico[]>(() => {
     const porId = new Map(categorias.map((c) => [c.id, c]))
     return (filas ?? [])
@@ -65,33 +67,39 @@ export default function Inicio() {
     }`
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start">
-      {/* Columna izquierda: presentación y contadores */}
-      <section className="space-y-5 lg:sticky lg:top-8">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-civico lg:text-4xl">
-          Reporta los problemas de tu ciudad y sigue su solución
-        </h1>
-        <p className="text-lg text-gris">
-          Baches, luminarias dañadas, fugas de agua o basura acumulada: márcalos en el mapa,
-          añade una foto y el municipio se encargará.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Link to="/reportar" className="rounded-xl bg-senal px-5 py-3 font-bold text-white">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,9fr)] lg:gap-16 xl:gap-24">      {/* Columna izquierda: presentación y contadores, centrada en vertical */}
+      <section className="flex flex-col justify-center gap-7 lg:py-6 xl:pl-8">        <div className="space-y-4">
+          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-senal">
+            Participación ciudadana
+          </p>
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-civico sm:text-4xl xl:text-5xl">
+            Reporta los problemas de tu ciudad y sigue su solución
+          </h1>
+          <p className="text-lg leading-relaxed text-gris">
+            Baches, luminarias dañadas, fugas de agua o basura acumulada: márcalos en el mapa,
+            añade una foto y el municipio se encargará.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-4 sm:flex-row lg:flex-col">
+          <Link to="/reportar"
+            className="flex h-14 items-center justify-center rounded-xl bg-senal px-6 text-lg font-bold text-white hover:bg-[#A63A0A]">
             Reportar incidencia
           </Link>
-          <Link to="/seguimiento" className="rounded-xl border border-civico px-5 py-3 font-semibold text-civico">
+          <Link to="/seguimiento"
+            className="flex h-14 items-center justify-center rounded-xl border-2 border-civico px-6 text-lg font-semibold text-civico hover:bg-civico-niebla">
             Consultar un código
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-bordillo bg-white p-4">
-            <p className="text-sm font-semibold text-gris">Abiertos</p>
-            <p className="text-3xl font-extrabold text-senal">{filas === null ? '…' : abiertos}</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-bordillo bg-white p-5">
+            <p className="text-sm font-semibold text-gris">Reportes abiertos</p>
+            <p className="mt-1 text-4xl font-extrabold text-senal">{filas === null ? '…' : abiertos}</p>
           </div>
-          <div className="rounded-2xl border border-bordillo bg-white p-4">
+          <div className="rounded-2xl border border-bordillo bg-white p-5">
             <p className="text-sm font-semibold text-gris">Resueltos</p>
-            <p className="text-3xl font-extrabold text-resuelto">{filas === null ? '…' : resueltos}</p>
+            <p className="mt-1 text-4xl font-extrabold text-resuelto">{filas === null ? '…' : resueltos}</p>
           </div>
         </div>
       </section>

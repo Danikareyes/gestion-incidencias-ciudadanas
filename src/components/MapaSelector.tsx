@@ -42,8 +42,8 @@ export default function MapaSelector({ punto, centro, onCambiar }: Props) {
     <MapContainer
       center={[centro.lat, centro.lng]}
       zoom={15}
-      className="h-80 w-full rounded-xl border border-bordillo"
-    >
+      className="h-80 w-full rounded-xl border border-bordillo lg:h-[30rem]"
+          >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"

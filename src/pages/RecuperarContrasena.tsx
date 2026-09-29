@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { supabase } from '../lib/supabase'
+   import PantallaAcceso from '../components/PantallaAcceso'
 
 export default function RecuperarContrasena() {
   const [email, setEmail] = useState('')
@@ -25,8 +26,7 @@ export default function RecuperarContrasena() {
   }
 
   return (
-    <section className="mx-auto max-w-sm space-y-6">
-      <h1 className="text-3xl font-extrabold text-civico">Recuperar contraseña</h1>
+      <PantallaAcceso titulo="Recuperar contraseña">
 
       {enviado ? (
         <div className="space-y-3 rounded-2xl border border-bordillo bg-white p-5">
@@ -58,6 +58,6 @@ export default function RecuperarContrasena() {
       <Link to="/login" className="inline-block text-sm font-semibold text-civico underline">
         Volver a iniciar sesión
       </Link>
-    </section>
+    </PantallaAcceso>
   )
 }

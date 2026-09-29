@@ -80,70 +80,74 @@ export default function DetalleReporte() {
   const resolucion = reporte.fotos_reporte.find((f) => f.tipo === 'resolucion')
 
   return (
-    <article className="mx-auto max-w-2xl space-y-6">
+    <article className="space-y-6">
       <Link to="/mis-reportes" className="text-sm font-semibold text-civico">← Mis reportes</Link>
 
       {/* Cabecera */}
-      <header className="space-y-3 rounded-2xl bg-civico p-6 text-white">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <header className="flex flex-wrap items-end justify-between gap-4 rounded-2xl bg-civico p-6 text-white lg:p-8">
+        <div className="space-y-2">
           <span className="font-mono text-sm text-white/70">{reporte.codigo_seguimiento}</span>
-          <button type="button" onClick={copiarCodigo}
-            className="rounded-lg border border-white/40 px-3 py-1.5 text-sm font-semibold">
-            {copiado ? 'Código copiado ✓' : 'Copiar código'}
-          </button>
+          <h1 className="text-2xl font-extrabold lg:text-3xl">{reporte.titulo}</h1>
+          <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
+            <EtiquetaEstado estado={reporte.estado} />
+            <span>{reporte.categorias?.nombre} · Prioridad {reporte.prioridad}</span>
+          </div>
         </div>
-        <h1 className="text-2xl font-extrabold">{reporte.titulo}</h1>
-        <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
-          <EtiquetaEstado estado={reporte.estado} />
-          <span>{reporte.categorias?.nombre} · Prioridad {reporte.prioridad}</span>
-        </div>
+        <button type="button" onClick={copiarCodigo}
+          className="rounded-lg border border-white/40 px-4 py-2 text-sm font-semibold">
+          {copiado ? 'Código copiado ✓' : 'Copiar código'}
+        </button>
       </header>
 
-      {/* Fotos antes / después */}
-      <section className="grid grid-cols-2 gap-3">
-        <figure className="space-y-1">
-          {evidencias[0] && (
-            <img src={urlFoto(evidencias[0].storage_path)} alt="Foto del problema reportado"
-              className="h-48 w-full rounded-xl object-cover" />
-          )}
-          <figcaption className="text-xs font-semibold text-gris">Antes</figcaption>
-        </figure>
-        <figure className="space-y-1">
-          {resolucion ? (
-            <img src={urlFoto(resolucion.storage_path)} alt="Foto de la solución"
-              className="h-48 w-full rounded-xl object-cover" />
-          ) : (
-            <div className="flex h-48 items-center justify-center rounded-xl border-2 border-dashed border-bordillo px-4 text-center text-sm text-gris">
-              Aparecerá cuando se resuelva
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-10">
+        {/* Columna izquierda: fotos y datos */}
+        <div className="space-y-6">
+          <section className="grid grid-cols-2 gap-4">
+            <figure className="space-y-1">
+              {evidencias[0] && (
+                <img src={urlFoto(evidencias[0].storage_path)} alt="Foto del problema reportado"
+                  className="h-48 w-full rounded-xl object-cover lg:h-80" />
+              )}
+              <figcaption className="text-xs font-semibold text-gris">Antes</figcaption>
+            </figure>
+            <figure className="space-y-1">
+              {resolucion ? (
+                <img src={urlFoto(resolucion.storage_path)} alt="Foto de la solución"
+                  className="h-48 w-full rounded-xl object-cover lg:h-80" />
+              ) : (
+                <div className="flex h-48 items-center justify-center rounded-xl border-2 border-dashed border-bordillo px-4 text-center text-sm text-gris lg:h-80">
+                  Aparecerá cuando se resuelva
+                </div>
+              )}
+              <figcaption className="text-xs font-semibold text-gris">Después</figcaption>
+            </figure>
+          </section>
+
+          {evidencias.length > 1 && (
+            <div className="flex gap-3">
+              {evidencias.slice(1).map((foto) => (
+                <img key={foto.id} src={urlFoto(foto.storage_path)} alt="Otra foto del problema"
+                  className="h-24 w-32 rounded-lg object-cover" />
+              ))}
             </div>
           )}
-          <figcaption className="text-xs font-semibold text-gris">Después</figcaption>
-        </figure>
-      </section>
 
-      {evidencias.length > 1 && (
-        <div className="flex gap-3">
-          {evidencias.slice(1).map((foto) => (
-            <img key={foto.id} src={urlFoto(foto.storage_path)} alt="Otra foto del problema"
-              className="h-20 w-28 rounded-lg object-cover" />
-          ))}
+          <section className="space-y-2 rounded-2xl border border-bordillo bg-white p-6">
+            <h2 className="font-bold">Descripción</h2>
+            <p>{reporte.descripcion}</p>
+            <p className="text-sm text-gris">{reporte.direccion ?? 'Sin dirección indicada'}</p>
+            <p className="font-mono text-xs text-gris">
+              {reporte.lat.toFixed(5)}, {reporte.lng.toFixed(5)} · Creado el {formatearFecha(reporte.created_at)}
+            </p>
+          </section>
         </div>
-      )}
 
-      {/* Datos */}
-      <section className="space-y-2 rounded-2xl border border-bordillo bg-white p-5">
-        <p>{reporte.descripcion}</p>
-        <p className="text-sm text-gris">{reporte.direccion ?? 'Sin dirección indicada'}</p>
-        <p className="font-mono text-xs text-gris">
-          {reporte.lat.toFixed(5)}, {reporte.lng.toFixed(5)} · Creado el {formatearFecha(reporte.created_at)}
-        </p>
-      </section>
-
-      {/* Historial */}
-      <section className="rounded-2xl border border-bordillo bg-white p-5">
-        <h2 className="mb-4 font-bold">Historial</h2>
-        <LineaTiempo eventos={eventos} estadoActual={reporte.estado} />
-      </section>
+        {/* Columna derecha: historial */}
+        <section className="self-start rounded-2xl border border-bordillo bg-white p-6 lg:sticky lg:top-6">
+          <h2 className="mb-4 font-bold">Historial</h2>
+          <LineaTiempo eventos={eventos} estadoActual={reporte.estado} />
+        </section>
+      </div>
     </article>
   )
-}
+}  

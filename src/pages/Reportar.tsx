@@ -204,109 +204,117 @@ export default function Reportar() {
     )
   }
 
+    // --- Formulario ---
   return (
-    <form onSubmit={enviar} className="mx-auto max-w-2xl space-y-8">
-      <h1 className="text-3xl font-extrabold text-civico">Reportar incidencia</h1>
+    <form onSubmit={enviar} className="space-y-6">
+      <div className="space-y-1">
+        <h1 className="text-3xl font-extrabold text-civico">Reportar incidencia</h1>
+        <p className="text-gris">Completa los tres pasos. Solo te tomará un par de minutos.</p>
+      </div>
 
-      {/* 1. UBICACIÓN */}
-      <section className="space-y-3">
-        <h2 className="text-lg font-bold">1. ¿Dónde está el problema?</h2>
-        <p className="text-sm text-gris">Toca el mapa para marcar el punto o usa tu ubicación. Puedes arrastrar el marcador.</p>
-        <MapaSelector punto={punto} centro={centro} onCambiar={cambiarPunto} />
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <button type="button" onClick={usarMiUbicacion} disabled={buscandoGps}
-            className="h-11 rounded-lg border border-civico bg-white px-4 font-semibold text-civico disabled:opacity-60">
-            {buscandoGps ? 'Buscando…' : 'Usar mi ubicación'}
-          </button>
-          <span className="font-mono text-xs text-gris">
-            {punto
-              ? `${punto.lat.toFixed(5)}, ${punto.lng.toFixed(5)}${precision ? ` · ±${precision} m` : ''}`
-              : 'Sin punto marcado'}
-          </span>
-        </div>
-        <div className="space-y-1">
-          <label htmlFor="direccion" className="text-sm font-semibold text-gris">Dirección o referencia (opcional)</label>
-          <input id="direccion" type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)}
-            placeholder="Ej.: Av. Principal y Calle 3, frente a la farmacia" className={`${claseCampo} h-11`} />
-        </div>
-      </section>
-
-      {/* 2. DETALLES */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-bold">2. Cuéntanos qué pasa</h2>
-
-        <fieldset className="space-y-2">
-          <legend className="mb-2 text-sm font-semibold text-gris">Categoría</legend>
-          <div className="grid grid-cols-2 gap-2">
-            {categorias.map((categoria) => {
-              const elegida = categoria.id === categoriaId
-              return (
-                <button key={categoria.id} type="button" aria-pressed={elegida}
-                  onClick={() => setCategoriaId(categoria.id)}
-                  className={`flex h-12 items-center gap-3 rounded-xl px-3 text-left font-semibold ${
-                    elegida ? 'border-2 border-civico bg-civico-niebla text-civico' : 'border border-bordillo bg-white'
-                  }`}>
-                  <span className="h-4 w-4 flex-shrink-0 rounded-full"
-                    style={{ backgroundColor: categoria.color ?? '#5B6470' }} />
-                  {categoria.nombre}
-                </button>
-              )
-            })}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-10">
+        {/* 1. UBICACIÓN (en escritorio queda fija al hacer scroll) */}
+        <section className="space-y-3 rounded-2xl border border-bordillo bg-white p-5 lg:sticky lg:top-6 lg:self-start">
+          <h2 className="text-lg font-bold">1. ¿Dónde está el problema?</h2>
+          <p className="text-sm text-gris">Toca el mapa para marcar el punto o usa tu ubicación. Puedes arrastrar el marcador.</p>
+          <MapaSelector punto={punto} centro={centro} onCambiar={cambiarPunto} />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <button type="button" onClick={usarMiUbicacion} disabled={buscandoGps}
+              className="h-11 rounded-lg border border-civico bg-white px-4 font-semibold text-civico disabled:opacity-60">
+              {buscandoGps ? 'Buscando…' : 'Usar mi ubicación'}
+            </button>
+            <span className="font-mono text-xs text-gris">
+              {punto
+                ? `${punto.lat.toFixed(5)}, ${punto.lng.toFixed(5)}${precision ? ` · ±${precision} m` : ''}`
+                : 'Sin punto marcado'}
+            </span>
           </div>
-        </fieldset>
-
-        <div className="space-y-1">
-          <label htmlFor="titulo" className="text-sm font-semibold text-gris">Título</label>
-          <input id="titulo" type="text" maxLength={100} value={titulo} onChange={(e) => setTitulo(e.target.value)}
-            placeholder="Ej.: Bache profundo en carril derecho" className={`${claseCampo} h-11`} />
-        </div>
-
-        <div className="space-y-1">
-          <div className="flex justify-between">
-            <label htmlFor="descripcion" className="text-sm font-semibold text-gris">Descripción</label>
-            <span className="text-xs text-gris">{descripcion.length} / 1000</span>
+          <div className="space-y-1">
+            <label htmlFor="direccion" className="text-sm font-semibold text-gris">Dirección o referencia (opcional)</label>
+            <input id="direccion" type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)}
+              placeholder="Ej.: Av. Principal y Calle 3, frente a la farmacia" className={`${claseCampo} h-11`} />
           </div>
-          <textarea id="descripcion" maxLength={1000} rows={4} value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            placeholder="Tamaño, riesgo, desde cuándo lo ves…" className={`${claseCampo} py-2`} />
-        </div>
-      </section>
+        </section>
 
-      {/* 3. FOTOS */}
-      <section className="space-y-3">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-lg font-bold">3. Fotos</h2>
-          <span className="text-sm text-gris">{fotos.length} / {MAX_FOTOS}</span>
-        </div>
-        <div className="grid grid-cols-3 gap-3">
-          {fotos.map((foto, indice) => (
-            <div key={foto.vista} className="relative">
-              <img src={foto.vista} alt={`Foto ${indice + 1}`} className="h-28 w-full rounded-lg object-cover" />
-              <button type="button" onClick={() => quitarFoto(indice)} aria-label={`Quitar foto ${indice + 1}`}
-                className="absolute right-1 top-1 h-8 w-8 rounded-full bg-asfalto/80 font-bold text-white">
-                ×
-              </button>
+        <div className="space-y-6">
+          {/* 2. DETALLES */}
+          <section className="space-y-4 rounded-2xl border border-bordillo bg-white p-5">
+            <h2 className="text-lg font-bold">2. Cuéntanos qué pasa</h2>
+
+            <fieldset className="space-y-2">
+              <legend className="mb-2 text-sm font-semibold text-gris">Categoría</legend>
+              <div className="grid grid-cols-2 gap-2">
+                {categorias.map((categoria) => {
+                  const elegida = categoria.id === categoriaId
+                  return (
+                    <button key={categoria.id} type="button" aria-pressed={elegida}
+                      onClick={() => setCategoriaId(categoria.id)}
+                      className={`flex h-12 items-center gap-3 rounded-xl px-3 text-left font-semibold ${
+                        elegida ? 'border-2 border-civico bg-civico-niebla text-civico' : 'border border-bordillo bg-white'
+                      }`}>
+                      <span className="h-4 w-4 flex-shrink-0 rounded-full"
+                        style={{ backgroundColor: categoria.color ?? '#5B6470' }} />
+                      {categoria.nombre}
+                    </button>
+                  )
+                })}
+              </div>
+            </fieldset>
+
+            <div className="space-y-1">
+              <label htmlFor="titulo" className="text-sm font-semibold text-gris">Título</label>
+              <input id="titulo" type="text" maxLength={100} value={titulo} onChange={(e) => setTitulo(e.target.value)}
+                placeholder="Ej.: Bache profundo en carril derecho" className={`${claseCampo} h-11`} />
             </div>
-          ))}
-          {fotos.length < MAX_FOTOS && (
-            <label className="flex h-28 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-civico bg-white text-sm font-semibold text-civico">
-              {procesandoFotos ? 'Procesando…' : '+ Añadir foto'}
-              <input type="file" accept="image/*" multiple onChange={agregarFotos}
-                disabled={procesandoFotos} className="sr-only" />
-            </label>
+
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <label htmlFor="descripcion" className="text-sm font-semibold text-gris">Descripción</label>
+                <span className="text-xs text-gris">{descripcion.length} / 1000</span>
+              </div>
+              <textarea id="descripcion" maxLength={1000} rows={4} value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                placeholder="Tamaño, riesgo, desde cuándo lo ves…" className={`${claseCampo} py-2`} />
+            </div>
+          </section>
+
+          {/* 3. FOTOS */}
+          <section className="space-y-3 rounded-2xl border border-bordillo bg-white p-5">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-bold">3. Fotos</h2>
+              <span className="text-sm text-gris">{fotos.length} / {MAX_FOTOS}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {fotos.map((foto, indice) => (
+                <div key={foto.vista} className="relative">
+                  <img src={foto.vista} alt={`Foto ${indice + 1}`} className="h-28 w-full rounded-lg object-cover" />
+                  <button type="button" onClick={() => quitarFoto(indice)} aria-label={`Quitar foto ${indice + 1}`}
+                    className="absolute right-1 top-1 h-8 w-8 rounded-full bg-asfalto/80 font-bold text-white">
+                    ×
+                  </button>
+                </div>
+              ))}
+              {fotos.length < MAX_FOTOS && (
+                <label className="flex h-28 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-civico bg-white text-sm font-semibold text-civico">
+                  {procesandoFotos ? 'Procesando…' : '+ Añadir foto'}
+                  <input type="file" accept="image/*" multiple onChange={agregarFotos}
+                    disabled={procesandoFotos} className="sr-only" />
+                </label>
+              )}
+            </div>
+            <p className="text-xs text-gris">Quitamos la ubicación oculta (EXIF) de tus fotos antes de subirlas.</p>
+          </section>
+
+          {error && (
+            <p role="alert" className="rounded-lg bg-senal-tenue px-3 py-2 text-sm text-senal">{error}</p>
           )}
+
+          <button type="submit" disabled={enviando || procesandoFotos}
+            className="h-14 w-full rounded-xl bg-senal text-lg font-bold text-white disabled:opacity-60">
+            {enviando ? 'Enviando reporte…' : 'Enviar reporte'}
+          </button>
         </div>
-        <p className="text-xs text-gris">Quitamos la ubicación oculta (EXIF) de tus fotos antes de subirlas.</p>
-      </section>
-
-      {error && (
-        <p role="alert" className="rounded-lg bg-senal-tenue px-3 py-2 text-sm text-senal">{error}</p>
-      )}
-
-      <button type="submit" disabled={enviando || procesandoFotos}
-        className="h-12 w-full rounded-xl bg-senal font-bold text-white disabled:opacity-60">
-        {enviando ? 'Enviando reporte…' : 'Enviar reporte'}
-      </button>
+      </div>
     </form>
   )
 }
