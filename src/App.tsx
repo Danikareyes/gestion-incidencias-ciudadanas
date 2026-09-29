@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import Registro from './pages/Registro'
 import PanelReportes from './pages/admin/PanelReportes'
 import DetalleReporte from './pages/DetalleReporte'
+import GestionReporte from './pages/admin/GestionReporte'
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         {/* Solo operadores y administradores */}
         <Route element={<RutaProtegida roles={['operador', 'admin']} />}>
           <Route path="admin" element={<PanelReportes />} />
+          <Route path="admin/reportes/:id" element={<GestionReporte />} />
         </Route>
       </Route>
     </Routes>

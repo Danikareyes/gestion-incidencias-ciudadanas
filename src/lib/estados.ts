@@ -14,3 +14,25 @@ export const ESTADOS: Record<Estado, { texto: string; clase: string }> = {
   resuelto:    { texto: 'Resuelto',    clase: 'bg-[#E2F0E8] text-resuelto' },
   rechazado:   { texto: 'Rechazado',   clase: 'bg-[#ECEBE7] text-[#4A525C]' },
 }
+
+export const TRANSICIONES: Record<Estado, Estado[]> = {
+  pendiente: ['en_revision', 'rechazado'],
+  en_revision: ['asignado', 'rechazado'],
+  asignado: ['en_progreso', 'rechazado'],
+  en_progreso: ['resuelto'],
+  resuelto: [],
+  rechazado: [],
+}
+
+export type Prioridad = 'baja' | 'media' | 'alta' | 'critica'
+
+export const PRIORIDADES: { valor: Prioridad; texto: string; clase: string }[] = [
+  { valor: 'baja', texto: 'Baja', clase: 'text-gris' },
+  { valor: 'media', texto: 'Media', clase: 'text-asfalto' },
+  { valor: 'alta', texto: 'Alta', clase: 'text-senal font-bold' },
+  { valor: 'critica', texto: 'Crítica', clase: 'text-[#9B1C1C] font-bold' },
+]
+
+export function datosPrioridad(valor: string) {
+  return PRIORIDADES.find((p) => p.valor === valor) ?? PRIORIDADES[1]
+}
