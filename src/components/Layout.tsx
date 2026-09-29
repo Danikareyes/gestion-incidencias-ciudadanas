@@ -12,7 +12,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-papel text-asfalto">
       <header className="bg-civico text-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="text-lg font-extrabold">Reportes Ciudadanos</Link>
 
           <nav className="flex flex-wrap items-center gap-1">
@@ -40,7 +40,7 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-8">
+      <main className="mx-auto max-w-7x1 px-4 py-8">
         <Outlet />
       </main>
     </div>

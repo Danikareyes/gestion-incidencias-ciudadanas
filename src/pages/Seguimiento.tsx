@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
+import { useSearchParams } from 'react-router'
 import { supabase } from '../lib/supabase'
 import { formatearFecha } from '../lib/formato'
 import type { Estado } from '../lib/estados'
@@ -16,18 +17,20 @@ type Resultado = {
 }
 
 export default function Seguimiento() {
-  const [codigo, setCodigo] = useState('')
+  const [params] = useSearchParams()
+  const codigoInicial = params.get('codigo') ?? ''
+
+  const [codigo, setCodigo] = useState(codigoInicial)
   const [resultado, setResultado] = useState<Resultado | null>(null)
   const [mensaje, setMensaje] = useState('')
   const [buscando, setBuscando] = useState(false)
 
-  async function buscar(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    if (!supabase) return
+  async function consultar(valor: string) {
+    if (!supabase || !valor.trim()) return
     setBuscando(true)
     setMensaje('')
     setResultado(null)
-    const { data, error } = await supabase.rpc('consultar_por_codigo', { p_codigo: codigo })
+    const { data, error } = await supabase.rpc('consultar_por_codigo', { p_codigo: valor })
     setBuscando(false)
     if (error) {
       setMensaje('No pudimos hacer la consulta. Inténtalo de nuevo.')
@@ -36,6 +39,20 @@ export default function Seguimiento() {
     } else {
       setResultado(data as Resultado)
     }
+  }
+
+  // Si llega un código en la dirección (desde el mapa), consultarlo automáticamente
+  useEffect(() => {
+    if (codigoInicial) {
+      setCodigo(codigoInicial)
+      consultar(codigoInicial)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [codigoInicial])
+
+  function buscar(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault()
+    consultar(codigo)
   }
 
   return (
