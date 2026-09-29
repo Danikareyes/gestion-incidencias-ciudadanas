@@ -10,6 +10,8 @@ import Registro from './pages/Registro'
 import PanelReportes from './pages/admin/PanelReportes'
 import DetalleReporte from './pages/DetalleReporte'
 import GestionReporte from './pages/admin/GestionReporte'
+import RecuperarContrasena from './pages/RecuperarContrasena'
+import NuevaContrasena from './pages/NuevaContrasena'
 
 export default function App() {
   return (
@@ -20,6 +22,8 @@ export default function App() {
         <Route path="seguimiento" element={<Seguimiento />} />
         <Route path="login" element={<Login />} />
         <Route path="registro" element={<Registro />} />
+        <Route path="recuperar" element={<RecuperarContrasena />} />
+        <Route path="nueva-contrasena" element={<NuevaContrasena />} />
 
         {/* Requieren sesión */}
         <Route element={<RutaProtegida />}>

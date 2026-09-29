@@ -60,6 +60,9 @@ export default function Login() {
         </button>
       </form>
 
+      <p className="text-sm">
+        <Link to="/recuperar" className="font-semibold text-civico underline">¿Olvidaste tu contraseña?</Link>
+      </p>
       <p className="text-sm text-gris">
         ¿No tienes cuenta?{' '}
         <Link to="/registro" className="font-semibold text-civico underline">Regístrate</Link>
