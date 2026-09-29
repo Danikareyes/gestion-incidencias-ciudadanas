@@ -8,6 +8,7 @@ import Seguimiento from './pages/Seguimiento'
 import Login from './pages/Login'
 import Registro from './pages/Registro'
 import PanelReportes from './pages/admin/PanelReportes'
+import DetalleReporte from './pages/DetalleReporte'
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
         <Route element={<RutaProtegida />}>
           <Route path="reportar" element={<Reportar />} />
           <Route path="mis-reportes" element={<MisReportes />} />
+          <Route path="mis-reportes/:id" element={<DetalleReporte />} />
+
         </Route>
 
         {/* Solo operadores y administradores */}
