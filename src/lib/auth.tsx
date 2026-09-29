@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!supabase || !usuarioId) return
     let activo = true
-    setCargando(true)
+    setTimeout(() => setCargando(true), 0)
     supabase
       .from('perfiles')
       .select('id, nombre, telefono, rol')

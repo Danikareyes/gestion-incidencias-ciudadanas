@@ -6,6 +6,18 @@ import { useAuth } from '../lib/auth'
 const claseCampo =
   'h-11 w-full rounded-lg border border-bordillo bg-white px-3 text-base focus:border-civico focus:outline-none'
 
+function traducirError(mensaje: string) {
+  const texto = mensaje.toLowerCase()
+  if (texto.includes('already registered')) return 'Ese correo ya tiene una cuenta. Inicia sesión.'
+  if (texto.includes('signups not allowed')) return 'El registro de usuarios está desactivado en Supabase.'
+  if (texto.includes('confirmation email')) return 'No se pudo enviar el correo de confirmación. Desactiva "Confirm email" en Supabase.'
+  if (texto.includes('rate limit')) return 'Demasiados intentos. Espera unos minutos y vuelve a probar.'
+  if (texto.includes('password')) return 'La contraseña no cumple los requisitos de seguridad.'
+  if (texto.includes('invalid')) return 'El correo no es válido.'
+  if (texto.includes('database error')) return 'Error al crear el perfil en la base de datos.'
+  return `No pudimos crear la cuenta (${mensaje}).`
+}
+
 export default function Registro() {
   const { session } = useAuth()
   const navigate = useNavigate()
@@ -38,7 +50,8 @@ export default function Registro() {
     })
     setEnviando(false)
     if (error) {
-      setError('No pudimos crear la cuenta. Revisa los datos o prueba con otro correo.')
+      console.error('Error de registro:', error)
+      setError(traducirError(error.message))
     } else if (!data.session) {
       setMensaje('Cuenta creada. Revisa tu correo para confirmarla.')
     } else {
